@@ -1,0 +1,50 @@
+{
+  "name": "CyberShieldLog",
+  "type": "object",
+  "properties": {
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "text",
+        "image",
+        "video",
+        "audio"
+      ]
+    },
+    "classification": {
+      "type": "string",
+      "enum": [
+        "SAFE",
+        "SUSPICIOUS",
+        "HARASSMENT",
+        "PHISHING",
+        "THREAT"
+      ]
+    },
+    "summary": {
+      "type": "string"
+    },
+    "saved_to_vault": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "content_type",
+    "classification"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

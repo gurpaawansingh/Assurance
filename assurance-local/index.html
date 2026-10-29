@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#183f38" />
+    <meta name="description" content="A private, local-first personal safety planner." />
+    <title>Assurance | Personal Safety</title>
+    <link rel="icon" href="/mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <div class="app-frame">
+      <aside class="sidebar" aria-label="Main navigation">
+        <a class="brand" href="#home" aria-label="Assurance home">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 32 36" fill="none"><path d="M16 2 29 7v9c0 8.7-5.4 14.6-13 18C8.4 30.6 3 24.7 3 16V7l13-5Z" stroke="currentColor" stroke-width="2.4"/><path d="m10 17 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+          <span class="brand-name">Assurance<span>PERSONAL SAFETY</span></span>
+        </a>
+
+        <p class="nav-label">YOUR SPACE</p>
+        <nav class="nav-list">
+          <button class="nav-item is-active" data-view="home" aria-current="page"><span class="nav-glyph">01</span>Overview</button>
+          <button class="nav-item" data-view="contacts"><span class="nav-glyph">02</span>Trusted people<span class="nav-count" id="contact-count">0</span></button>
+          <button class="nav-item" data-view="cybersecurity"><span class="nav-glyph">03</span>CyberShield AI</button>
+          <button class="nav-item" data-view="journey-tracking"><span class="nav-glyph">04</span>Journey Monitor</button>
+          <button class="nav-item" data-view="privacy"><span class="nav-glyph">05</span>Privacy & data</button>
+        </nav>
+
+        <div class="sidebar-bottom">
+          <div class="privacy-chip"><span class="privacy-dot"></span><span>Stored on this device</span></div>
+          <p>Nothing is sent to a server. Your plans stay in this browser.</p>
+        </div>
+      </aside>
+
+      <main class="main-content">
+        <header class="topbar">
+          <div class="mobile-brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 36" fill="none"><path d="M16 2 29 7v9c0 8.7-5.4 14.6-13 18C8.4 30.6 3 24.7 3 16V7l13-5Z" stroke="currentColor" stroke-width="2.4"/><path d="m10 17 4 4 8-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span><strong>Assurance</strong></div>
+          <p class="today-label" id="today-label"></p>
+          <div class="top-actions">
+            <button class="top-action" data-view="privacy" aria-label="Open privacy and data settings"><span aria-hidden="true">◉</span><span class="top-action-text">Local & private</span></button>
+            <button class="emergency-launch" id="emergency-launch" type="button"><span aria-hidden="true">!</span> Emergency</button>
+          </div>
+        </header>
+
+        <section class="view is-visible" id="view-home" aria-labelledby="page-title">
+          <div class="page-intro">
+            <p class="eyebrow"><span class="eyebrow-line"></span>YOUR SAFETY, AT YOUR PACE</p>
+            <h1 id="page-title">A little more<br /><em>prepared.</em></h1>
+            <p class="intro-copy">Keep your next step, your people, and your plan somewhere you can find them.</p>
+          </div>
+
+          <form id="emergency-pin-entry" class="pin-strip" hidden>
+            <label for="emergency-pin">Enter PIN</label>
+            <input id="emergency-pin" type="password" inputmode="numeric" autocomplete="off" pattern="[0-9]{4}" maxlength="4" aria-label="Enter PIN" />
+            <button type="submit" class="button button-dark">Verify PIN <span aria-hidden="true">✓</span></button>
+            <span class="pin-hint" id="emergency-pin-message">Enter your PIN to proceed.</span>
+          </form>
+
+          <div class="overview-grid">
+            <section class="journey-panel" aria-labelledby="journey-title">
+              <div class="panel-heading">
+                <div><p class="section-kicker">CHECK-IN PLAN</p><h2 id="journey-title">Going somewhere?</h2></div>
+                <span class="status-mark" id="journey-status">READY</span>
+              </div>
+              <p class="panel-copy" id="journey-copy">Set a destination and check-in time. Your plan stays on this device.</p>
+              <form id="journey-form" class="journey-form">
+                <label class="field-label" for="destination">Destination <span>OPTIONAL</span></label>
+                <input id="destination" name="destination" maxlength="80" placeholder="e.g. Evening class" autocomplete="off" />
+                <div class="field-row">
+                  <div class="field-grow"><label class="field-label" for="duration">Check in after</label>
+                    <select id="duration" name="duration"><option value="30">30 minutes</option><option value="60" selected>1 hour</option><option value="90">1 hour 30</option><option value="120">2 hours</option><option value="240">4 hours</option></select>
+                  </div>
+                  <button class="button button-primary journey-submit" type="submit">Start plan <span aria-hidden="true">↗</span></button>
+                </div>
+              </form>
+              <div class="journey-active" id="journey-active" hidden>
+                <div class="countdown-wrap"><span class="countdown-label">TIME TO CHECK IN</span><strong id="countdown">--:--</strong></div>
+                <p id="active-destination" class="active-destination"></p>
+                <button class="button button-light" id="safe-button" type="button">I’m safe, end check-in <span aria-hidden="true">✓</span></button>
+                <button class="text-button" id="extend-button" type="button">Add 30 minutes</button>
+              </div>
+              <div class="panel-footnote"><span aria-hidden="true">i</span> This is a personal reminder, not a monitored service.</div>
+            </section>
+
+            <section class="people-panel" aria-labelledby="people-title">
+              <div class="panel-heading">
+                <div><p class="section-kicker">YOUR CIRCLE</p><h2 id="people-title">Trusted people</h2></div>
+                <span class="people-number" id="people-number">00</span>
+              </div>
+              <p class="panel-copy">People you may want close at hand.</p>
+              <div class="people-preview" id="people-preview"></div>
+              <button class="outline-button" data-view="contacts" type="button">Manage trusted people <span aria-hidden="true">→</span></button>
+            </section>
+          </div>
+
+          <section class="lower-band">
+            <div class="note-callout">
+              <div class="note-symbol" aria-hidden="true">🛡</div>
+              <div><p class="section-kicker">DIGITAL SAFETY</p><h2>CyberShield AI Assistance</h2><p>Get AI-powered advice on online safety, harassment, and digital security concerns.</p></div>
+              <button class="button button-dark" data-view="cybersecurity" type="button">Open CyberShield <span aria-hidden="true">↗</span></button>
+            </div>
+            <div class="recent-section">
+              <div class="recent-heading"><div><p class="section-kicker">RECENTLY</p><h2>Small steps count.</h2></div><span class="recent-rule"></span></div>
+              <div id="recent-activity" class="activity-list"></div>
+            </div>
+          </section>
+          <p class="safety-disclaimer">Assurance is a personal planning tool. Emergency mode shares location only on this screen and does not contact emergency services. You choose whether to open and send each contact alert.</p>
+        </section>
+
+        <section class="view" id="view-contacts" aria-labelledby="contacts-title" hidden>
+          <div class="page-intro compact-intro"><p class="eyebrow"><span class="eyebrow-line"></span>YOUR PEOPLE</p><h1 id="contacts-title">Keep them<br /><em>close.</em></h1><p class="intro-copy">Save the details you might need. They’re stored only in this browser.</p></div>
+          <div class="content-layout">
+            <form id="contact-form" class="form-panel">
+              <p class="section-kicker">ADD SOMEONE</p><h2>Trusted person</h2>
+              <label class="field-label" for="contact-name">Name</label><input id="contact-name" name="name" required maxlength="70" placeholder="Their name" autocomplete="name" />
+              <label class="field-label" for="contact-email">Email address</label><input id="contact-email" name="email" type="email" required maxlength="100" placeholder="their@email.com" autocomplete="email" />
+              <label class="field-label" for="contact-relation">How you know them <span>OPTIONAL</span></label><input id="contact-relation" name="relation" maxlength="50" placeholder="Friend, sibling, neighbour…" />
+              <label class="field-label" for="contact-phone">Phone number <span>OPTIONAL</span></label><input id="contact-phone" name="phone" type="tel" maxlength="40" placeholder="Add a number for quick calling" autocomplete="tel" />
+              <button class="button button-primary form-submit" type="submit">Add to my circle <span aria-hidden="true">+</span></button>
+            </form>
+            <div class="list-panel"><div class="list-heading"><div><p class="section-kicker">YOUR CIRCLE</p><h2>People on hand</h2></div><span id="contacts-total" class="list-total">0 SAVED</span></div><div id="contacts-list" class="contacts-list"></div></div>
+          </div>
+          <p class="safety-disclaimer">Saving a contact here does not notify them. Use your device’s call function when you choose to reach out.</p>
+        </section>
+        <section class="view" id="view-cybersecurity" aria-labelledby="cybersecurity-title" hidden>
+          <div class="page-intro compact-intro">
+            <p class="eyebrow"><span class="eyebrow-line"></span>DIGITAL SAFETY</p>
+            <h1 id="cybersecurity-title">CyberShield<br /><em>AI Advisor</em></h1>
+            <p class="intro-copy">Get personalized advice on online harassment, social media safety, and digital security. Upload evidence and escalate to authorities if needed.</p>
+          </div>
+          
+          <div class="cyber-layout">
+            <div class="cyber-chat-panel">
+              <div class="cyber-header">
+                <p class="section-kicker">AI ASSISTANCE</p>
+                <h2>How can I help?</h2>
+                <p class="cyber-desc">Describe your situation, upload screenshots or videos of concerning conversations, and receive guidance.</p>
+              </div>
+              
+              <div class="cyber-chat-messages" id="cyber-messages">
+                <div class="cyber-message cyber-ai">
+                  <div class="cyber-avatar">AI</div>
+                  <div class="cyber-content">
+                    <p><strong>Welcome to CyberShield</strong></p>
+                    <p>I'm here to help with online safety concerns including:</p>
+                    <ul>
+                      <li>Social media harassment or threats</li>
+                      <li>Unwanted contact or stalking behavior</li>
+                      <li>Privacy and security advice</li>
+                      <li>Reporting and documentation guidance</li>
+                    </ul>
+                    <p>You can type your concern below or upload evidence (screenshots, videos).</p>
+                  </div>
+                </div>
+              </div>
+              
+              <form id="cyber-form" class="cyber-input-panel">
+                <div class="cyber-file-preview" id="cyber-file-preview"></div>
+                <div class="cyber-input-row">
+                  <textarea id="cyber-input" placeholder="Describe your situation or ask a question..." rows="3" maxlength="2000"></textarea>
+                  <div class="cyber-actions">
+                    <label class="cyber-upload-btn">
+                      📎 Attach
+                      <input type="file" id="cyber-file-input" accept="image/*,video/*" multiple hidden />
+                    </label>
+                    <button type="submit" class="button button-primary">Send</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+            
+            <div class="cyber-sidebar">
+              <section class="cyber-resources">
+                <p class="section-kicker">EMERGENCY CONTACTS</p>
+                <h3>Government & Support</h3>
+                <div class="resource-list">
+                  <div class="resource-item">
+                    <strong>National Cyber Crime Reporting Portal (India)</strong>
+                    <p>Report cybercrime incidents</p>
+                    <a href="https://cybercrime.gov.in" target="_blank" class="resource-link">cybercrime.gov.in</a>
+                    <p class="resource-phone">Helpline: 1930</p>
+                  </div>
+                  <div class="resource-item">
+                    <strong>Women's Helpline</strong>
+                    <p>24/7 support for women in distress</p>
+                    <p class="resource-phone">Call: 1091 / 181</p>
+                  </div>
+                  <div class="resource-item">
+                    <strong>National Commission for Women</strong>
+                    <p>Women's rights and safety</p>
+                    <a href="http://ncw.nic.in" target="_blank" class="resource-link">ncw.nic.in</a>
+                    <p class="resource-phone">Helpline: 7827-170-170</p>
+                  </div>
+                  <div class="resource-item">
+                    <strong>Local Police Cyber Cell</strong>
+                    <p>Contact your city's cyber crime cell for immediate assistance</p>
+                    <p class="resource-phone">General: 100</p>
+                  </div>
+                </div>
+              </section>
+              
+              <section class="cyber-escalation">
+                <p class="section-kicker">ESCALATION</p>
+                <h3>Report to Authorities</h3>
+                <p>If your situation requires official intervention, you can prepare a report with your conversation history and evidence.</p>
+                <button id="cyber-escalate-btn" class="button button-dark" type="button">Prepare Report <span aria-hidden="true">⚠</span></button>
+                <p class="form-footnote">This creates a summary. You control whether to file it with authorities.</p>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <section class="view" id="view-journey-tracking" aria-labelledby="journey-tracking-title" hidden>
+          <div class="page-intro compact-intro">
+            <p class="eyebrow"><span class="eyebrow-line"></span>TRAVEL SAFETY</p>
+            <h1 id="journey-tracking-title">Journey<br /><em>Monitor</em></h1>
+            <p class="intro-copy">Track taxi or rideshare journeys. If the route deviates from the expected path, emergency countdown starts automatically.</p>
+          </div>
+          
+          <div class="journey-track-layout">
+            <div class="journey-track-panel">
+              <form id="journey-track-form" class="form-panel">
+                <p class="section-kicker">START MONITORING</p>
+                <h2>Track your ride</h2>
+                
+                <label class="field-label" for="journey-start">Starting point</label>
+                <input id="journey-start" name="start" required maxlength="150" placeholder="Where you're being picked up" autocomplete="off" />
+                
+                <label class="field-label" for="journey-destination">Destination</label>
+                <input id="journey-destination" name="destination" required maxlength="150" placeholder="Where you're going" autocomplete="off" />
+                
+                <label class="field-label" for="journey-link">Rideshare tracking link <span>OPTIONAL</span></label>
+                <input id="journey-link" name="link" type="url" maxlength="500" placeholder="https://... (Uber, Ola, etc.)" autocomplete="off" />
+                
+                <label class="field-label" for="journey-expected-duration">Expected duration (minutes)</label>
+                <input id="journey-expected-duration" name="duration" type="number" min="5" max="300" value="30" required />
+                
+                <button class="button button-primary form-submit" type="submit">Start monitoring <span aria-hidden="true">📍</span></button>
+              </form>
+              
+              <div id="journey-track-active" class="journey-track-active" hidden>
+                <div class="track-status">
+                  <div class="track-indicator"></div>
+                  <div>
+                    <p class="section-kicker">MONITORING ACTIVE</p>
+                    <h2 id="track-route-status">Route looks normal</h2>
+                  </div>
+                </div>
+                
+                <div class="track-details">
+                  <div class="track-info">
+                    <strong>From:</strong> <span id="track-from"></span>
+                  </div>
+                  <div class="track-info">
+                    <strong>To:</strong> <span id="track-to"></span>
+                  </div>
+                  <div class="track-info">
+                    <strong>Time elapsed:</strong> <span id="track-elapsed">0:00</span>
+                  </div>
+                  <div class="track-info">
+                    <strong>Expected arrival:</strong> <span id="track-expected"></span>
+                  </div>
+                </div>
+                
+                <div class="track-actions">
+                  <button class="button button-light" id="track-arrived" type="button">I've arrived safely <span aria-hidden="true">✓</span></button>
+                  <button class="outline-button" id="track-extend" type="button">Add 10 minutes</button>
+                  <button class="text-button" id="track-cancel" type="button">Stop monitoring</button>
+                </div>
+                
+                <div class="track-warning" id="track-warning" hidden>
+                  <p>⚠ <strong>Route deviation detected</strong></p>
+                  <p>Your journey is taking longer than expected. Emergency countdown will start in <span id="track-warning-countdown">30</span> seconds unless you confirm you're safe.</p>
+                  <button class="button button-primary" id="track-confirm-safe">I'm safe, continue trip</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="journey-track-info">
+              <div class="track-feature">
+                <h3>🗺️ Intelligent monitoring</h3>
+                <p>The AI monitors your journey duration and can detect significant deviations from expected travel time.</p>
+              </div>
+              <div class="track-feature">
+                <h3>⚡ Auto-alert</h3>
+                <p>If your journey exceeds the expected time by 50%, you'll get a warning. After 30 seconds, emergency countdown starts automatically.</p>
+              </div>
+              <div class="track-feature">
+                <h3>🔗 Share with contacts</h3>
+                <p>When monitoring starts, you can choose to notify your trusted contacts with journey details.</p>
+              </div>
+              <p class="form-footnote">This feature uses time-based monitoring. For GPS tracking, use your rideshare app's built-in sharing feature.</p>
+            </div>
+          </div>
+        </section>
+        <section class="view" id="view-notes" aria-labelledby="notes-title" hidden>
+          <div class="page-intro compact-intro"><p class="eyebrow"><span class="eyebrow-line"></span>ONLY FOR YOU</p><h1>Your own<br /><em>words.</em></h1><p class="intro-copy">Jot down what matters to you. Notes never leave this browser.</p></div>
+          <div class="content-layout notes-layout">
+            <form id="note-form" class="form-panel note-form-panel"><p class="section-kicker">NEW NOTE</p><h2>Put it in writing</h2>
+              <label class="field-label" for="note-title">Title <span>OPTIONAL</span></label><input id="note-title" name="title" maxlength="80" placeholder="A few words to find it later" />
+              <label class="field-label" for="note-body">Your note</label><textarea id="note-body" name="body" required maxlength="1200" rows="6" placeholder="Write what you want to remember…"></textarea>
+              <button class="button button-primary form-submit" type="submit">Save private note <span aria-hidden="true">↗</span></button><p class="form-footnote">Saved in this browser’s local storage.</p>
+            </form>
+            <div class="list-panel"><div class="list-heading"><div><p class="section-kicker">YOUR JOURNAL</p><h2>Saved notes</h2></div><span id="notes-total" class="list-total">0 SAVED</span></div><div id="notes-list" class="notes-list"></div></div>
+          </div>
+          <p class="safety-disclaimer">For your privacy, avoid saving passwords, financial details, or information you would not want someone with access to this device to see.</p>
+        </section>
+
+        <section class="view" id="view-privacy" aria-labelledby="privacy-title" hidden>
+          <div class="page-intro compact-intro"><p class="eyebrow"><span class="eyebrow-line"></span>YOUR DATA, YOUR CALL</p><h1>Private by<br /><em>default.</em></h1><p class="intro-copy">This standalone version keeps its data in your browser, not on a service.</p></div>
+          <div class="privacy-layout">
+            <section class="privacy-summary"><span class="privacy-large-dot"></span><div><p class="section-kicker">LOCAL STORAGE</p><h2>This device only</h2><p>Contacts, notes, and check-in plans are saved in this browser’s local storage. There is no account, remote database, or background monitoring.</p></div></section>
+            <section class="privacy-actions"><div><p class="section-kicker">TAKE YOUR DATA WITH YOU</p><h2>Export a backup</h2><p>Download your saved contacts, notes, and check-in plan as a JSON file.</p></div><button class="outline-button" id="export-button" type="button">Export my data <span aria-hidden="true">↓</span></button></section>
+            <section class="privacy-actions pin-settings"><form id="emergency-pin-form"><div><p class="section-kicker">SECURITY</p><h2>Set your PINs</h2><p>Choose two distinct 4-digit PINs. One stops the emergency timer, the other triggers an immediate alert. They are stored only in this browser.</p></div><div class="pin-settings-fields"><label for="start-pin">Safe PIN</label><input id="start-pin" type="password" inputmode="numeric" autocomplete="new-password" pattern="[0-9]{4}" minlength="4" maxlength="4" required /><label for="cancel-pin">Alert PIN</label><input id="cancel-pin" type="password" inputmode="numeric" autocomplete="new-password" pattern="[0-9]{4}" minlength="4" maxlength="4" required /><button class="outline-button" type="submit">Save PINs <span aria-hidden="true">✓</span></button><span id="pin-settings-status" class="pin-settings-status" role="status">PINs not set</span></div></form></section>
+            <section class="privacy-actions danger-row"><div><p class="section-kicker">START FRESH</p><h2>Clear local data</h2><p>Remove every saved contact, note, and check-in from this browser.</p></div><button class="danger-button" id="clear-button" type="button">Clear my data</button></section>
+            <p class="safety-disclaimer">Clearing browser data or using a different browser can remove access to your saved information. Export a backup first if you need one.</p>
+          </div>
+        </section>
+
+        <nav class="mobile-nav" aria-label="Mobile navigation">
+          <button class="mobile-nav-item is-active" data-view="home" aria-current="page"><span aria-hidden="true">⌂</span>Home</button>
+          <button class="mobile-nav-item" data-view="contacts"><span aria-hidden="true">○</span>People</button>
+          <button class="mobile-nav-item" data-view="cybersecurity"><span aria-hidden="true">🛡</span>Cyber</button>
+          <button class="mobile-nav-item" data-view="journey-tracking"><span aria-hidden="true">📍</span>Track</button>
+          <button class="mobile-nav-item" data-view="privacy"><span aria-hidden="true">◉</span>Data</button>
+        </nav>
+      </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    <dialog class="emergency-dialog" id="emergency-dialog" aria-labelledby="emergency-title">
+      <div class="emergency-dialog-header"><span class="emergency-beacon" aria-hidden="true"></span><div><p class="section-kicker">EMERGENCY MODE</p><h2 id="emergency-title">Session active</h2></div><button class="icon-button emergency-close" id="emergency-close" type="button" aria-label="Close emergency panel">×</button></div>
+      <p class="emergency-disclosure">Location is being read on this device while this page stays open. Nothing is transmitted or monitored remotely.</p>
+      <div class="location-status" id="location-status" role="status">Requesting location permission…</div>
+      <p class="location-coordinates" id="location-coordinates">Waiting for a location fix.</p>
+      <div class="emergency-contact-list"><p class="section-kicker">CONTACTS TO ALERT</p><div id="emergency-contacts"></div></div>
+      <p class="emergency-manual-note">Choose a contact to open your messaging app with an alert drafted. You still need to send it.</p>
+      <form id="emergency-cancel-form" class="emergency-cancel-form"><label for="emergency-cancel-pin">Enter your PIN</label><div><input id="emergency-cancel-pin" type="password" inputmode="numeric" autocomplete="off" pattern="[0-9]{4}" maxlength="4" /><button class="outline-button" type="submit">Submit</button></div></form>
+      <button class="danger-button emergency-end" id="emergency-end" type="button">End session</button>
+    </dialog>
+    <dialog class="confirm-dialog" id="confirm-dialog"><form method="dialog"><p class="section-kicker">CLEAR LOCAL DATA</p><h2>Are you sure?</h2><p>This permanently removes all data saved by Assurance Local in this browser.</p><div class="dialog-actions"><button class="outline-button" value="cancel">Keep my data</button><button class="danger-button" id="confirm-clear" value="confirm">Clear everything</button></div></form></dialog>
+  </body>
+</html>

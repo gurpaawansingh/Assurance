@@ -1,0 +1,6 @@
+import React from 'react';
+import { MapPinned, ArrowUpRight } from 'lucide-react';
+export default function ResourcesPanel() {
+  const options = [['Police stations','police station near me'],['Hospitals','hospital near me'],['Emergency services','emergency services near me'],['Women’s support','women support services near me']];
+  return <section className="rounded-3xl bg-white border border-stone-200 p-5 sm:p-7 shadow-sm"><div className="flex items-center gap-3 mb-2"><div className="p-2.5 bg-violet-50 rounded-xl text-violet-800"><MapPinned size={20}/></div><h2 className="text-xl font-semibold">Find nearby help</h2></div><p className="text-sm text-slate-500 mb-5">Open a map search for nearby services. Review hours, availability, and legitimacy yourself; listings are not verified by this app.</p><div className="grid sm:grid-cols-2 gap-2">{options.map(([label,q])=><a key={label} href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`} target="_blank" rel="noreferrer" className="flex justify-between items-center p-4 rounded-2xl bg-stone-50 hover:bg-violet-50 text-sm font-semibold text-slate-800 transition-colors">{label}<ArrowUpRight size={17}/></a>)}</div></section>;
+}

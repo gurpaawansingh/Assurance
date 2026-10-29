@@ -1,0 +1,51 @@
+{
+  "name": "SafetyJourney",
+  "type": "object",
+  "properties": {
+    "destination": {
+      "type": "string"
+    },
+    "due_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "check_in_interval": {
+      "type": "number"
+    },
+    "safety_note": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "arrived",
+        "emergency"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "destination",
+    "due_at",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

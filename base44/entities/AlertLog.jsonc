@@ -1,0 +1,59 @@
+{
+  "name": "AlertLog",
+  "type": "object",
+  "properties": {
+    "contact_name": {
+      "type": "string"
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "sms",
+        "whatsapp",
+        "email",
+        "push"
+      ]
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "sos",
+        "missed_checkin",
+        "route_deviation",
+        "trip_timeout"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "acknowledged",
+        "failed"
+      ],
+      "default": "sent"
+    },
+    "acknowledged": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "contact_name",
+    "alert_type",
+    "status"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

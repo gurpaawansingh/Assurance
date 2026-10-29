@@ -1,0 +1,40 @@
+{
+  "name": "AppNotification",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "enum": [
+        "info",
+        "warning",
+        "emergency",
+        "success"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "category",
+    "title",
+    "message"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

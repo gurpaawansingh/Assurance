@@ -1,0 +1,15 @@
+{
+  "name": "assurance-local",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs",
+    "email-server": "node email-server.mjs"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "nodemailer": "^6.10.1"
+  }
+}

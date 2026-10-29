@@ -1,0 +1,19 @@
+const db = globalThis.__B44_DB__ || { auth:{ isAuthenticated: async()=>false, me: async()=>null }, entities:new Proxy({}, { get:()=>({ filter:async()=>[], get:async()=>null, create:async()=>({}), update:async()=>({}), delete:async()=>({}) }) }), integrations:{ Core:{ UploadFile:async()=>({ file_url:'' }) } } };
+
+import React, { useState } from 'react';
+
+import { Route, CheckCircle2, MessageCircle } from 'lucide-react';
+import { smsLink } from './safetyUtils';
+
+export default function JourneyPanel({ journeys, contacts, reload }) {
+  const [destination, setDestination] = useState(''); const [due, setDue] = useState(''); const [busy, setBusy] = useState(false); const [error, setError] = useState('');
+  async function start(e) { e.preventDefault(); setBusy(true); setError(''); try { await db.entities.SafetyJourney.create({ destination: destination.trim(), due_at: new Date(due).toISOString(), status: 'active' }); setDestination(''); setDue(''); await reload(); } catch (err) { setError(err.message || 'Could not start journey.'); } finally { setBusy(false); } }
+  async function arrived(id) { setBusy(true); setError(''); try { await db.entities.SafetyJourney.update(id, { status: 'arrived' }); await reload(); } catch (err) { setError(err.message || 'Could not update journey.'); } finally { setBusy(false); } }
+  const active = journeys.filter(j => j.status === 'active');
+  return <section className="rounded-3xl bg-white border border-stone-200 p-5 sm:p-7 shadow-sm"><div className="flex items-center gap-3 mb-2"><div className="p-2.5 bg-amber-50 rounded-xl text-amber-800"><Route size={20}/></div><h2 className="text-xl font-semibold">Safe journey</h2></div>
+    <p className="text-sm text-slate-500 mb-5">Plan a check-in time, then mark yourself arrived. This page shows overdue journeys when opened; it cannot monitor in the background or alert contacts automatically.</p>
+    <form onSubmit={start} className="grid sm:grid-cols-[1fr_1fr_auto] gap-2 mb-5"><input required maxLength={120} value={destination} onChange={e=>setDestination(e.target.value)} placeholder="Destination" aria-label="Destination" className="field"/><input required type="datetime-local" min={new Date(Date.now()+60000-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16)} value={due} onChange={e=>setDue(e.target.value)} aria-label="Expected arrival time" className="field"/><button disabled={busy} className="action-button bg-violet-800 text-white">Start</button></form>
+    {active.length ? <div className="space-y-3">{active.map(j => { const overdue = new Date(j.due_at) < new Date(); return <div key={j.id} className="rounded-2xl border border-stone-200 p-4"><div className="flex justify-between gap-2"><div><p className="font-semibold text-slate-900">{j.destination}</p><p className="text-xs text-slate-500">Expected {new Date(j.due_at).toLocaleString()}</p></div><span className={`text-xs font-bold ${overdue ? 'text-red-700' : 'text-violet-800'}`}>{overdue ? 'Overdue' : 'In progress'}</span></div><div className="flex flex-wrap gap-4 mt-3 text-sm"><button disabled={busy} onClick={()=>arrived(j.id)} className="inline-flex gap-1 items-center text-violet-800 font-semibold"><CheckCircle2 size={16}/> I arrived</button>{contacts[0] && <a className="inline-flex gap-1 items-center text-slate-700 underline" href={smsLink(contacts[0].phone, `My journey to ${j.destination} is ${overdue ? 'overdue and I may need help' : 'in progress'}. Expected arrival: ${new Date(j.due_at).toLocaleString()}.`)}><MessageCircle size={16}/> Draft update</a>}</div></div>; })}</div> : <p className="text-sm text-slate-500 bg-stone-50 rounded-xl p-4">No active journey.</p>}
+    {error && <p role="alert" className="text-red-700 text-sm mt-3">{error}</p>}
+  </section>;
+}

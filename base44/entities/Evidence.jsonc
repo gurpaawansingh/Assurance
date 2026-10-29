@@ -1,0 +1,44 @@
+{
+  "name": "Evidence",
+  "type": "object",
+  "properties": {
+    "incident_id": {
+      "type": "string"
+    },
+    "file_url": {
+      "type": "string"
+    },
+    "file_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "video",
+        "audio",
+        "text",
+        "document"
+      ]
+    },
+    "file_name": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "incident_id",
+    "file_url",
+    "file_type"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}

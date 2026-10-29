@@ -1,0 +1,34 @@
+{
+  "name": "SafetyProfile",
+  "type": "object",
+  "properties": {
+    "salt": {
+      "type": "string"
+    },
+    "safe_hash": {
+      "type": "string"
+    },
+    "sos_hash": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "salt",
+    "safe_hash",
+    "sos_hash"
+  ],
+  "rls": {
+    "read": {
+      "created_by_id": "{{user.id}}"
+    },
+    "create": {
+      "created_by_id": "{{user.id}}"
+    },
+    "update": {
+      "created_by_id": "{{user.id}}"
+    },
+    "delete": {
+      "created_by_id": "{{user.id}}"
+    }
+  }
+}
